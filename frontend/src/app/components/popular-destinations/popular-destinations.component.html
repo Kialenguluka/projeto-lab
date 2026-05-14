@@ -1,0 +1,43 @@
+<section class="container mx-auto px-4 py-8">
+  <h2 class="mb-4 text-xl font-bold text-foreground">Popular entre viajantes de Angola</h2>
+
+  <div class="mb-4 flex gap-2">
+    @for (tab of tabs; track tab; let i = $index) {
+      <button
+        type="button"
+        (click)="setTab(i)"
+        class="rounded-md border px-3 py-1.5 text-sm font-medium transition-colors"
+        [class.border-border]="activeTab !== i"
+        [class.text-muted-foreground]="activeTab !== i"
+        [class.bg-primary]="activeTab === i"
+        [class.text-primary-foreground]="activeTab === i"
+        [class.border-primary]="activeTab === i"
+      >
+        {{ tab }}
+      </button>
+    }
+  </div>
+
+  <div class="mb-4">
+    @for (city of internationalCities; track city) {
+      <p class="cursor-pointer text-sm text-primary hover:underline">{{ city }}</p>
+    }
+  </div>
+
+  <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
+    @for (category of categories; track category; let i = $index) {
+      <span class="flex items-center">
+        <a [routerLink]="['/categoria', category.toLowerCase()]" class="hover:text-primary hover:underline">{{ category }}</a>
+        @if (i < categories.length - 1) {
+          <span class="ml-4">·</span>
+        }
+      </span>
+    }
+  </div>
+
+  <div class="mt-4">
+    <a routerLink="/estadias-mensais" class="text-sm text-primary hover:underline">
+      Descubra as estadias mensais
+    </a>
+  </div>
+</section>

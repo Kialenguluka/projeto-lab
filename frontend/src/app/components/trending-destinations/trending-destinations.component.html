@@ -1,0 +1,50 @@
+<section class="container mx-auto px-4 py-8">
+  <h2 class="mb-1 text-xl font-bold text-foreground">Destinos em voga</h2>
+  <p class="mb-4 text-muted-foreground">
+    As escolhas mais populares para os viajantes de Angola
+  </p>
+
+  <div class="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+    @for (destination of largeDestinations; track destination.name) {
+      <a
+        [routerLink]="['/destino', slug(destination.name)]"
+        class="group relative h-64 overflow-hidden rounded-lg"
+      >
+        <img
+          [src]="destination.image"
+          [alt]="destination.name"
+          class="h-full w-full object-cover transition-transform group-hover:scale-105"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <h3 class="flex items-center gap-2 text-xl font-bold text-white">
+            {{ destination.name }} <span>{{ destination.flag }}</span>
+          </h3>
+        </div>
+      </a>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+    @for (destination of smallDestinations; track destination.name) {
+      <a
+        [routerLink]="['/destino', slug(destination.name)]"
+        class="group relative h-48 overflow-hidden rounded-lg"
+      >
+        <img
+          [src]="destination.image"
+          [alt]="destination.name"
+          class="h-full w-full object-cover transition-transform group-hover:scale-105"
+          loading="lazy"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+        <div class="absolute bottom-4 left-4">
+          <h3 class="flex items-center gap-2 text-lg font-bold text-white">
+            {{ destination.name }} <span>{{ destination.flag }}</span>
+          </h3>
+        </div>
+      </a>
+    }
+  </div>
+</section>

@@ -1,0 +1,105 @@
+<div class="min-h-screen bg-background">
+  <app-header />
+  <main>
+    <app-hero />
+
+    <section class="container mx-auto -mt-32 px-4 pb-12">
+      <h2 class="mb-10 text-center text-3xl font-extrabold tracking-tight text-white md:text-4xl">
+        {{ t('why') }}
+      </h2>
+      
+      <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Feature 1 -->
+        <div class="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-xl transition-all hover:-translate-y-2 hover:shadow-2xl">
+          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          <h3 class="mb-3 text-lg font-bold text-neutral-900">Compre já, receba rápido</h3>
+          <p class="text-sm leading-relaxed text-neutral-500">
+            Produtos disponíveis com um processo de encomenda simplificado e entregas otimizadas.
+          </p>
+        </div>
+
+        <!-- Feature 2 -->
+        <div class="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-xl transition-all hover:-translate-y-2 hover:shadow-2xl">
+          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-orange-50 text-orange-600 transition-colors group-hover:bg-orange-600 group-hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3 class="mb-3 text-lg font-bold text-neutral-900">Atendimento sempre perto</h3>
+          <p class="text-sm leading-relaxed text-neutral-500">
+            Apoio humanizado para acompanhar as suas compras, pagamentos e dúvidas a qualquer momento.
+          </p>
+        </div>
+
+        <!-- Feature 3 -->
+        <div class="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-xl transition-all hover:-translate-y-2 hover:shadow-2xl">
+          <div class="mb-6 flex h-14 w-14 items-center justify-center rounded-xl bg-yellow-50 text-yellow-600 transition-colors group-hover:bg-yellow-600 group-hover:text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 0 20"/><path d="M12 2a15.3 15.3 0 0 0 0 20"/></svg>
+          </div>
+          <h3 class="mb-3 text-lg font-bold text-neutral-900">Variedade para todos</h3>
+          <p class="text-sm leading-relaxed text-neutral-500">
+            Desde eletrónica a moda e beleza, temos as melhores categorias essenciais para o seu dia a dia.
+          </p>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="container mx-auto px-4 py-10">
+      <div class="mb-5 flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold text-foreground">{{ t('featured') }}</h2>
+          <p class="text-muted-foreground">{{ t('featuredSubtitle') }}</p>
+        </div>
+        <a routerLink="/catalogo" class="text-sm font-bold text-primary hover:underline">{{ t('viewCatalog') }}</a>
+      </div>
+
+      @if (loading) {
+        <div class="rounded-lg border bg-card py-10 text-center text-muted-foreground">{{ t('loadingProducts') }}</div>
+      } @else if (featuredProducts.length === 0) {
+        <div class="rounded-lg border bg-card py-10 text-center text-muted-foreground">
+          {{ t('apiEmpty') }}
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 gap-x-4 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          @for (product of featuredProducts; track product.id) {
+            <app-property-card [product]="product" [promotion]="isPromotion(product)" />
+          }
+        </div>
+      }
+    </section>
+
+    @if (!isAuthenticated) {
+      <section class="container mx-auto px-4 py-10">
+        <div class="overflow-hidden rounded-lg border border-border bg-card">
+          <div class="flex flex-col items-center justify-between md:flex-row">
+            <div class="flex-1 p-6">
+              <h3 class="mb-2 text-xl font-bold text-card-foreground">{{ t('saveTitle') }}</h3>
+              <p class="mb-5 text-sm text-muted-foreground">
+                {{ t('saveText') }}
+              </p>
+              <div class="flex gap-3">
+                <a routerLink="/auth/login" class="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:bg-primary/90">
+                  {{ t('login') }}
+                </a>
+                <a routerLink="/auth/register" class="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-bold hover:bg-accent">
+                  {{ t('signup') }}
+                </a>
+              </div>
+            </div>
+            <div class="flex h-40 w-full items-center justify-center bg-booking-yellow/10 p-6 md:w-56">
+              <div class="relative">
+                <svg xmlns="http://www.w3.org/2000/svg" width="88" height="88" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-booking-yellow"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>
+                <div class="absolute -bottom-2 -right-3 rounded bg-primary px-2 py-1 text-xs font-bold text-primary-foreground">
+                  Oferta
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+  </main>
+  <app-footer />
+</div>

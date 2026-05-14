@@ -1,0 +1,202 @@
+<div class="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+  <app-header />
+
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header Controls -->
+    <div class="mb-8 flex flex-col gap-4 md:flex-row md:items-center">
+      <div class="relative flex-1 max-w-2xl">
+        <svg class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+        <input
+          type="search"
+          [(ngModel)]="searchQuery"
+          (keyup.enter)="applyFilters()"
+          placeholder="Pesquisar produtos..."
+          class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-3 pl-12 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+        />
+      </div>
+      <div class="flex gap-3">
+        <select
+          [(ngModel)]="sortBy"
+          class="h-11 w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 text-sm text-gray-900 dark:text-white md:w-56 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
+        >
+          <option value="recommended">Recomendados</option>
+          <option value="price-low">Preço: Baixo a Alto</option>
+          <option value="price-high">Preço: Alto a Baixo</option>
+          <option value="stock">Mais Stock</option>
+        </select>
+        <button
+          type="button"
+          (click)="mobileFiltersOpen = true"
+          class="inline-flex h-11 items-center gap-2 rounded-xl bg-gray-200 dark:bg-gray-700 px-5 text-sm font-medium text-gray-800 dark:text-gray-200 md:hidden"
+        >
+          Filtros
+        </button>
+        <!-- Desktop Search Button -->
+        <button
+          type="button"
+          (click)="applyFilters()"
+          class="hidden md:inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white hover:opacity-90 shadow-sm"
+        >
+          Pesquisar
+        </button>
+      </div>
+    </div>
+
+    @if (mobileFiltersOpen) {
+      <div class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm md:hidden" (click)="closeMobileFilters()"></div>
+      <div
+        class="fixed inset-y-0 left-0 z-50 w-4/5 max-w-sm overflow-y-auto border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-6 shadow-2xl md:hidden"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="mb-6 flex items-center justify-between">
+          <h2 class="text-xl font-bold dark:text-white">Filtros</h2>
+          <button type="button" class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200" (click)="closeMobileFilters()">
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+        <ng-container *ngTemplateOutlet="filterContent" />
+      </div>
+    }
+
+    <div class="flex flex-col md:flex-row gap-8">
+      <aside class="hidden w-64 shrink-0 md:block">
+        <div class="sticky top-24 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
+          <h3 class="mb-5 text-lg font-bold dark:text-white flex items-center gap-2">
+            <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+            Filtros
+          </h3>
+          <ng-container *ngTemplateOutlet="filterContent" />
+        </div>
+      </aside>
+
+      <div class="flex-1">
+        <div class="mb-6 flex items-center justify-between">
+          <h1 class="text-xl md:text-2xl font-bold dark:text-white">
+            @if (loading) {
+              A carregar...
+            } @else {
+              {{ totalItems }} {{ promotionsOnly ? 'promoções' : 'produtos' }}
+            }
+          </h1>
+        </div>
+
+        @if (loading) {
+          <div class="flex justify-center py-20">
+            <div class="animate-spin w-12 h-12 border-4 border-primary border-t-transparent rounded-full"></div>
+          </div>
+        } @else if (errorMessage) {
+          <div class="rounded-2xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-8 text-center">
+            <h3 class="mb-2 text-xl font-bold text-red-700 dark:text-red-400">Oops! Algo correu mal</h3>
+            <p class="text-red-600 dark:text-red-300">{{ errorMessage }}</p>
+          </div>
+        } @else if (sortedProducts.length === 0) {
+          <div class="rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 py-16 text-center shadow-sm">
+            <div class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+              <svg class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <h3 class="mb-2 text-xl font-bold dark:text-white">Nenhum produto encontrado</h3>
+            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">Tente ajustar os filtros, limpar a categoria ou pesquisar por outro termo.</p>
+            <button (click)="searchQuery=''; selectedCategories=[]; priceMin=0; priceMax=500000; applyFilters()" class="mt-6 text-primary font-medium hover:underline">
+              Limpar todos os filtros
+            </button>
+          </div>
+        } @else {
+          <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            @for (product of sortedProducts; track product.id) {
+              <app-property-card [product]="product" [promotion]="isPromotion(product)" />
+            }
+          </div>
+
+          <!-- Pagination -->
+          @if (totalPages > 1) {
+            <div class="mt-12 flex justify-center">
+              <nav class="flex items-center gap-2 bg-white dark:bg-gray-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
+                <button
+                  (click)="changePage(currentPage - 1)"
+                  [disabled]="currentPage === 1"
+                  class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                
+                @for (page of pagesArray; track page) {
+                  <button
+                    (click)="changePage(page)"
+                    [class]="currentPage === page 
+                      ? 'w-10 h-10 rounded-lg bg-primary text-white font-bold shadow-md'
+                      : 'w-10 h-10 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium transition-colors'">
+                    {{ page }}
+                  </button>
+                }
+
+                <button
+                  (click)="changePage(currentPage + 1)"
+                  [disabled]="currentPage === totalPages"
+                  class="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-30 transition-colors">
+                  <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                </button>
+              </nav>
+            </div>
+          }
+        }
+      </div>
+    </div>
+  </div>
+
+  <app-footer />
+</div>
+
+<ng-template #filterContent>
+  <div class="space-y-8">
+    <div>
+      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Categorias</h4>
+      <div class="space-y-3">
+        @for (category of categories; track category.id) {
+          <label class="flex cursor-pointer items-center gap-3 text-sm group">
+            <input
+              type="checkbox"
+              [checked]="isCategoryChecked(category.slug)"
+              (change)="toggleCategory(category.slug)"
+              class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"
+            />
+            <span class="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors font-medium">
+              {{ category.name_pt || category.name_en }}
+            </span>
+          </label>
+        }
+      </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+
+    <div>
+      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Preço (AOA)</h4>
+      <div class="grid grid-cols-2 gap-3">
+        <label class="text-xs text-gray-500">
+          Mínimo
+          <input type="number" [(ngModel)]="priceMin" class="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+        </label>
+        <label class="text-xs text-gray-500">
+          Máximo
+          <input type="number" [(ngModel)]="priceMax" class="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
+        </label>
+      </div>
+    </div>
+
+    <hr class="border-gray-200 dark:border-gray-700">
+
+    <div>
+      <label class="flex cursor-pointer items-center gap-3 text-sm group">
+        <input type="checkbox" [(ngModel)]="showOnlyAvailable" class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700" />
+        <span class="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors font-medium">Apenas produtos com stock</span>
+      </label>
+    </div>
+
+    <button
+      (click)="applyFilters()"
+      class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl font-bold transition-colors">
+      Aplicar Filtros
+    </button>
+  </div>
+</ng-template>

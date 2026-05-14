@@ -1,0 +1,111 @@
+<div class="p-6">
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold dark:text-white">Painel de Administração</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">Visão geral do sistema MiniStore AO</p>
+  </div>
+
+  @if (loading) {
+    <div class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+      <div class="animate-spin w-5 h-5 border-2 border-primary border-t-transparent rounded-full"></div>
+      A carregar métricas...
+    </div>
+  }
+
+  @if (stats) {
+    <!-- Métricas -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Encomendas</p>
+        <p class="text-3xl font-bold dark:text-white mt-1">{{ stats.orders.total }}</p>
+        <p class="text-xs text-yellow-600 mt-1">{{ stats.orders.pending }} pendentes</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Receita Total</p>
+        <p class="text-2xl font-bold text-green-600 dark:text-green-400 mt-1">AOA {{ stats.orders.revenue | number:'1.0-0' }}</p>
+        <p class="text-xs text-gray-500 mt-1">{{ stats.orders.delivered }} entregues</p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Produtos</p>
+        <p class="text-3xl font-bold dark:text-white mt-1">{{ stats.products.total }}</p>
+        <p class="text-xs mt-1" [class]="stats.products.low_stock > 0 ? 'text-red-500' : 'text-gray-500'">
+          {{ stats.products.low_stock }} stock baixo
+        </p>
+      </div>
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
+        <p class="text-sm text-gray-500 dark:text-gray-400">Utilizadores</p>
+        <p class="text-3xl font-bold dark:text-white mt-1">{{ stats.users.total }}</p>
+        <p class="text-xs text-gray-500 mt-1">{{ stats.categories.total }} categorias</p>
+      </div>
+    </div>
+
+    <!-- Ações Rápidas -->
+    <div class="mb-8">
+      <h2 class="text-lg font-semibold dark:text-white mb-4">Ações Rápidas</h2>
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        @for (action of quickActions; track action.href) {
+          <a [routerLink]="action.href"
+             class="flex flex-col items-center gap-2 p-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-primary hover:shadow-md transition-all text-center">
+            <span class="text-2xl">{{ action.icon }}</span>
+            <span class="text-sm font-medium dark:text-white">{{ action.label }}</span>
+          </a>
+        }
+      </div>
+    </div>
+
+    <!-- Layout de 2 colunas -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Encomendas Recentes -->
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold dark:text-white">Encomendas Recentes</h2>
+          <a routerLink="/admin/encomendas" class="text-sm text-primary hover:underline">Ver todas →</a>
+        </div>
+        @if (stats.recent_orders.length === 0) {
+          <p class="text-gray-500 dark:text-gray-400 text-sm">Nenhuma encomenda ainda.</p>
+        } @else {
+          <div class="space-y-3">
+            @for (order of stats.recent_orders; track order.id) {
+              <div class="flex items-center justify-between py-2 border-b dark:border-gray-700 last:border-0">
+                <div>
+                  <p class="font-medium text-sm dark:text-white">#{{ order.id }} — {{ order.user_name }}</p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">{{ formatDate(order.created_at) }}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm font-medium dark:text-white">AOA {{ order.total | number:'1.0-0' }}</p>
+                  <span [class]="statusClass(order.status)" class="text-xs px-2 py-0.5 rounded-full">
+                    {{ statusLabel(order.status) }}
+                  </span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Produtos com Stock Baixo -->
+      <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold dark:text-white">Stock Baixo ⚠️</h2>
+          <a routerLink="/admin/produtos" class="text-sm text-primary hover:underline">Gerir →</a>
+        </div>
+        @if (stats.low_stock_products.length === 0) {
+          <p class="text-green-600 dark:text-green-400 text-sm">✅ Todos os produtos têm stock suficiente.</p>
+        } @else {
+          <div class="space-y-3">
+            @for (p of stats.low_stock_products; track p.id) {
+              <div class="flex items-center justify-between py-2 border-b dark:border-gray-700 last:border-0">
+                <p class="text-sm dark:text-white">{{ p.name_pt }}</p>
+                <span [class]="p.stock === 0 ? 'text-red-600 font-bold' : 'text-yellow-600 font-semibold'" class="text-sm">
+                  {{ p.stock === 0 ? 'Esgotado' : p.stock + ' un.' }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+    </div>
+  }
+</div>

@@ -1,0 +1,47 @@
+<div class="flex min-h-screen flex-col bg-booking-blue">
+  <div class="container mx-auto px-4 py-4">
+    <a routerLink="/" class="text-2xl font-bold text-white">MiniStore AO</a>
+  </div>
+
+  <div class="flex flex-1 items-center justify-center px-4">
+    <div class="w-full max-w-md rounded-lg border bg-card text-card-foreground shadow-sm">
+      <div class="space-y-1 border-b p-6 text-center">
+        <h1 class="text-2xl font-semibold">Iniciar sessao</h1>
+        <p class="text-sm text-muted-foreground">Insira as suas credenciais para aceder a sua conta</p>
+      </div>
+      <div class="p-6">
+        <form (ngSubmit)="onSubmit($event)" class="space-y-4">
+          <div class="space-y-2">
+            <label for="email" class="text-sm font-medium">Email</label>
+            <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="seu@email.com" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
+          </div>
+          <div class="space-y-2">
+            <label for="password" class="text-sm font-medium">Palavra-passe</label>
+            <div class="relative">
+              <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm" />
+              <button type="button" (click)="showPassword = !showPassword" class="absolute right-0 top-0 flex h-10 w-10 items-center justify-center text-muted-foreground" aria-label="Mostrar palavra-passe">
+                <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <svg *ngIf="showPassword" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m2 2 20 20"/><path d="M10.58 10.58a2 2 0 0 0 2.83 2.83"/><path d="M9.88 4.24A10.94 10.94 0 0 1 12 4c7 0 10 8 10 8a18.5 18.5 0 0 1-2.16 3.19"/><path d="M6.61 6.61A13.5 13.5 0 0 0 2 12s3 8 10 8a10.8 10.8 0 0 0 5.39-1.61"/></svg>
+              </button>
+            </div>
+          </div>
+          <a routerLink="/auth/forgot-password" class="text-sm text-primary hover:underline">Esqueceu a palavra-passe?</a>
+          <button type="submit" [disabled]="isLoading" class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50">
+            {{ isLoading ? 'A entrar...' : 'Iniciar sessao' }}
+          </button>
+          @if (errorMessage) {
+            <p class="rounded-md bg-destructive/10 px-3 py-2 text-center text-sm text-destructive">{{ errorMessage }}</p>
+          }
+          <p class="text-center text-sm text-muted-foreground">
+            Nao tem uma conta?
+            <a routerLink="/auth/register" class="text-primary hover:underline">Registe-se</a>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="py-4 text-center">
+    <a routerLink="/" class="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white">Voltar a pagina inicial</a>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+# Root
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# Backend
+backend/vendor/
+backend/composer.lock
+backend/uploads/avatars/*
+!backend/uploads/avatars/.gitkeep
+scratch/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/src/assets/products/*
+!frontend/src/assets/products/.gitkeep
+
+# Environment
+.env
+config.local.php

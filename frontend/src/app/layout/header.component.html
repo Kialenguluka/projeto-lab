@@ -1,0 +1,77 @@
+<header class="bg-booking-blue text-white">
+  <div class="container mx-auto px-4">
+    <div class="flex items-center justify-between gap-4 py-4">
+      <a routerLink="/" class="text-2xl font-bold tracking-tight">MiniStore AO</a>
+
+      <div class="hidden items-center gap-3 md:flex">
+        <button type="button" class="text-sm font-semibold">AOA</button>
+        <button
+          type="button"
+          (click)="toggleMenu($event, 'language')"
+          class="rounded-md px-2 py-1 text-sm font-semibold hover:bg-white/10"
+        >
+          {{ language.flag }}
+        </button>
+        <button
+          type="button"
+          class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-white/10"
+          (click)="toggleTheme($event)"
+          aria-label="Tema"
+        >
+          <svg *ngIf="!isDark" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          <svg *ngIf="isDark" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+        </button>
+        <a *ngIf="isAdmin" routerLink="/admin" class="rounded-md border border-white/70 px-4 py-1.5 text-sm font-medium hover:bg-white hover:text-booking-blue">{{ t('adminPanel') }}</a>
+        
+        <div *ngIf="isAuthenticated && authUser" class="flex items-center gap-2 px-2 border-l border-white/20 ml-2">
+          <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold overflow-hidden border border-white/10">
+            <img *ngIf="authUser.avatar" [src]="'http://localhost:8000/' + authUser.avatar" class="w-full h-full object-cover" />
+            <span *ngIf="!authUser.avatar">{{ authUser.name.charAt(0).toUpperCase() }}</span>
+          </div>
+          <span class="text-xs font-semibold">{{ authUser.name }}</span>
+        </div>
+
+
+        <a *ngIf="!isAuthenticated" routerLink="/auth/register" class="rounded-md border border-white/70 px-4 py-1.5 text-sm font-medium hover:bg-white hover:text-booking-blue">{{ t('register') }}</a>
+        <a *ngIf="!isAuthenticated" routerLink="/auth/login" class="rounded-md border border-white/70 px-4 py-1.5 text-sm font-medium hover:bg-white hover:text-booking-blue">{{ t('login') }}</a>
+        <button *ngIf="isAuthenticated" type="button" (click)="logout()" class="rounded-md border border-white/70 px-4 py-1.5 text-sm font-medium hover:bg-white hover:text-booking-blue">{{ t('logout') }}</button>
+
+      </div>
+    </div>
+
+    <nav class="scrollbar-hide flex gap-3 overflow-x-auto pb-6">
+      @for (item of navItems; track item.href + item.labelKey) {
+        <a
+          [routerLink]="item.href"
+          [queryParams]="item.queryParams || null"
+          [class.border-white]="isActiveItem(item)"
+          [class.bg-white]="isActiveItem(item)"
+          [class.text-booking-blue]="isActiveItem(item)"
+          class="inline-flex shrink-0 items-center gap-2 rounded-full border border-transparent px-4 py-2 text-sm font-semibold hover:border-white/80 hover:bg-white/10"
+        >
+          @if (item.icon === 'home') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 10 9-7 9 7"/><path d="M5 10v10h14V10"/></svg>
+          }
+          @if (item.icon === 'bag') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          }
+          @if (item.icon === 'spark') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v18"/><path d="m17 8-5-5-5 5"/><path d="m17 16-5 5-5-5"/></svg>
+          }
+          @if (item.icon === 'device') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>
+          }
+          @if (item.icon === 'tag') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.59 2.59A2 2 0 0 0 11.17 2H4a2 2 0 0 0-2 2v7.17a2 2 0 0 0 .59 1.42l8.82 8.82a2 2 0 0 0 2.83 0l7.17-7.17a2 2 0 0 0 0-2.83z"/><path d="M7 7h.01"/></svg>
+          }
+          @if (item.icon === 'cart') {
+            <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+          }
+          {{ t(item.labelKey) }}
+        </a>
+      }
+      <a routerLink="/encomendas" [class.bg-white]="isActive('/encomendas')" [class.text-booking-blue]="isActive('/encomendas')" class="inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold hover:bg-white/10">{{ t('orders') }}</a>
+      <a routerLink="/perfil" [class.bg-white]="isActive('/perfil')" [class.text-booking-blue]="isActive('/perfil')" class="inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold hover:bg-white/10">{{ t('profile') }}</a>
+    </nav>
+  </div>
+</header>

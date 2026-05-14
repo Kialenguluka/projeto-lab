@@ -1,0 +1,115 @@
+<div class="min-h-screen bg-background">
+  <app-header />
+  <main class="container mx-auto px-4 py-8">
+    <h1 class="mb-6 text-2xl font-bold">O seu carrinho</h1>
+
+    @if (loading) {
+      <div class="rounded-lg border bg-card py-12 text-center text-muted-foreground">
+        A carregar carrinho...
+      </div>
+    } @else if (errorMessage && cartItems.length === 0) {
+      <div class="rounded-lg border bg-card py-12 text-center">
+        <h2 class="mb-2 text-xl font-semibold">Carrinho indisponivel</h2>
+        <p class="mb-6 text-muted-foreground">{{ errorMessage }}</p>
+        <a routerLink="/auth/login" class="inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          Entrar
+        </a>
+      </div>
+    } @else if (cartItems.length === 0) {
+      <div class="rounded-lg border bg-card py-12 text-center">
+        <svg class="mx-auto mb-4 h-16 w-16 text-muted-foreground" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        <h2 class="mb-2 text-xl font-semibold">O seu carrinho esta vazio</h2>
+        <p class="mb-6 text-muted-foreground">Explore os nossos produtos e adicione ao carrinho.</p>
+        <a routerLink="/catalogo" class="inline-flex rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          Ver produtos
+        </a>
+        @if (successMessage) {
+          <p class="mt-4 text-sm text-green-600">{{ successMessage }}</p>
+        }
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div class="space-y-4 lg:col-span-2">
+          @for (item of cartItems; track item.id) {
+            <div class="rounded-lg border bg-card">
+              <div class="p-4">
+                <div class="flex gap-4">
+                  <div class="relative h-24 w-32 shrink-0 overflow-hidden rounded-lg">
+                    <img [src]="itemImage(item)" [alt]="itemName(item)" class="h-full w-full object-cover" />
+                  </div>
+                  <div class="min-w-0 flex-1">
+                    <div class="flex justify-between gap-2">
+                      <div>
+                        <h3 class="font-semibold">{{ itemName(item) }}</h3>
+                        <p class="text-sm text-muted-foreground">AOA {{ item.price | number }} por unidade</p>
+                      </div>
+                      <button type="button" (click)="removeItem(item.id)" class="shrink-0 text-destructive" aria-label="Remover">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+                      </button>
+                    </div>
+                    <div class="mt-2 text-sm text-muted-foreground">
+                      <p>Stock disponivel: {{ item.stock }}</p>
+                    </div>
+                    <div class="mt-3 flex items-center justify-between">
+                      <div class="flex items-center gap-2">
+                        <button type="button" (click)="updateQuantity(item, -1)" class="inline-flex h-8 w-8 items-center justify-center rounded-md border text-sm">-</button>
+                        <span class="w-8 text-center">{{ item.quantity }}</span>
+                        <button type="button" (click)="updateQuantity(item, 1)" class="inline-flex h-8 w-8 items-center justify-center rounded-md border text-sm">+</button>
+                      </div>
+                      <p class="font-semibold">AOA {{ (item.price * item.quantity) | number }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <div class="lg:col-span-1">
+          <div class="sticky top-6 rounded-lg border bg-card">
+            <div class="border-b p-4">
+              <h2 class="text-lg font-semibold">Resumo do pedido</h2>
+            </div>
+            <div class="space-y-4 p-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-muted-foreground">Subtotal</span>
+                <span>AOA {{ subtotal | number }}</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-muted-foreground">IVA (14%)</span>
+                <span>AOA {{ taxes | number }}</span>
+              </div>
+              <div class="border-t pt-4">
+                <div class="flex justify-between text-lg font-semibold">
+                  <span>Total</span>
+                  <span>AOA {{ total | number }}</span>
+                </div>
+              </div>
+              @if (errorMessage) {
+                <p class="text-sm text-destructive">{{ errorMessage }}</p>
+              }
+            </div>
+            <div class="flex flex-col gap-3 border-t p-4">
+              <button type="button" (click)="openCheckout()" class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary px-4 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+                Finalizar compra
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </button>
+              <a routerLink="/catalogo" class="inline-flex w-full items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium hover:bg-accent">
+                Continuar a comprar
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+    @if (showCheckoutModal) {
+      <app-checkout-modal
+        [totalAmount]="total"
+        (confirmed)="onCheckoutConfirmed($event)"
+        (cancelled)="onCheckoutCancelled()"
+      />
+    }
+
+  </main>
+  <app-footer />
+</div>
