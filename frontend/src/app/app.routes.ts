@@ -17,6 +17,9 @@ import { HomeComponent } from './pages/home/home.component';
 import { PerfilComponent } from './pages/perfil/perfil.component';
 import { PropriedadeDetailComponent } from './pages/propriedade/propriedade-detail.component';
 import { StubPageComponent } from './pages/stub/stub-page.component';
+import { SobreComponent } from './pages/sobre/sobre.component';
+import { TermosComponent } from './pages/termos/termos.component';
+import { PrivacidadeComponent } from './pages/privacidade/privacidade.component';
 import { authGuard } from './core/guards/auth.guard';
 import { adminGuard } from './core/guards/admin.guard';
 
@@ -24,6 +27,9 @@ export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'promocoes', component: CatalogoComponent },
+  { path: 'sobre', component: SobreComponent },
+  { path: 'termos', component: TermosComponent },
+  { path: 'privacidade', component: PrivacidadeComponent },
   { path: 'carrinho', component: CarrinhoComponent, canActivate: [authGuard] },
   { path: 'auth/login', component: AuthLoginComponent },
   { path: 'auth/register', component: AuthRegisterComponent },
@@ -44,7 +50,6 @@ export const routes: Routes = [
   { path: 'categoria/:slug', component: StubPageComponent },
   { path: 'novidades', component: StubPageComponent },
   { path: 'mais-vendidos', component: StubPageComponent },
-  { path: 'termos', component: StubPageComponent },
-  { path: 'privacidade', component: StubPageComponent },
   { path: '**', redirectTo: '' },
 ];
+

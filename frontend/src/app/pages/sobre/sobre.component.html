@@ -1,0 +1,65 @@
+<app-header />
+
+<main class="min-h-screen bg-white dark:bg-neutral-950">
+  <!-- Hero Section -->
+  <section class="relative py-24 overflow-hidden border-b dark:border-neutral-800">
+    <div class="container mx-auto px-6 relative z-10">
+      <div class="max-w-3xl">
+        <h1 class="text-5xl md:text-6xl font-bold tracking-tight text-neutral-900 dark:text-white mb-6">
+          Mais que uma loja, uma <span class="text-primary">revolução digital</span> em Angola.
+        </h1>
+        <p class="text-xl text-neutral-600 dark:text-neutral-400 leading-relaxed mb-8">
+          A MiniStore AO foi concebida no coração do ISPTEC como um desafio: criar a plataforma de e-commerce mais robusta, intuitiva e segura para o mercado nacional.
+        </p>
+      </div>
+    </div>
+    <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="py-24 bg-neutral-50 dark:bg-neutral-900/50">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-12">
+        <div *ngFor="let item of features" class="p-8 bg-white dark:bg-neutral-900 rounded-3xl border border-neutral-200 dark:border-neutral-800 shadow-sm hover:shadow-xl transition-all duration-300 group">
+          <div class="w-12 h-12 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-6 group-hover:scale-110 transition-transform">
+            <svg *ngIf="item.icon === 'sparkles'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/><path d="M5 3v4"/><path d="M19 17v4"/><path d="M3 5h4"/><path d="M17 19h4"/></svg>
+            <svg *ngIf="item.icon === 'shield-check'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.5 3.8 17 5 19 5a1 1 0 0 1 1 1v7Z"/><path d="m9 12 2 2 4-4"/></svg>
+            <svg *ngIf="item.icon === 'truck'" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-5h-4v5a1 1 0 0 0 1 1Z"/><path d="M16 8h4.74a1 1 0 0 1 .82.43l2.44 3.57"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">{{ item.title }}</h3>
+          <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">{{ item.description }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Content Section -->
+  <section class="py-24">
+    <div class="container mx-auto px-6">
+      <div class="grid md:grid-cols-2 gap-20 items-center">
+        <div>
+          <h2 class="text-3xl font-bold text-neutral-900 dark:text-white mb-8">Nossa Missão</h2>
+          <div class="space-y-6 text-lg text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <p>
+              Proporcionar aos angolanos uma forma simples e moderna de adquirir produtos de qualidade, sem as barreiras tradicionais do comércio eletrónico.
+            </p>
+            <p>
+              Focamos na experiência do utilizador, desde o primeiro clique até à entrega final, garantindo que cada passo seja transparente e gratificante.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-square bg-gradient-to-br from-primary/20 to-primary/5 rounded-3xl overflow-hidden border dark:border-neutral-800 flex items-center justify-center">
+            <span class="text-primary font-bold text-6xl opacity-20">ISPTEC 2026</span>
+          </div>
+          <div class="absolute -bottom-6 -left-6 p-8 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border dark:border-neutral-800">
+            <p class="text-primary font-bold text-3xl">100%</p>
+            <p class="text-xs uppercase tracking-widest text-neutral-500">Desenvolvimento Nacional</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<app-footer />
