@@ -27,7 +27,7 @@ export class AuthService {
   login(email: string, password: string): Promise<AuthResponse> {
     return lastValueFrom(
       this.http
-        .post<{ data: AuthResponse }>('http://localhost:8000/api/auth/login', {
+        .post<{ data: AuthResponse }>('/api/auth/login', {
           email,
           password,
         })
@@ -53,7 +53,7 @@ export class AuthService {
 
     return lastValueFrom(
       this.http
-        .post<{ data: AuthResponse }>('http://localhost:8000/api/auth/register', formData)
+        .post<{ data: AuthResponse }>('/api/auth/register', formData)
         .pipe(
           map((response) => {
             if (response.data?.token) {
@@ -69,7 +69,7 @@ export class AuthService {
   fetchMe(): Promise<AuthUser> {
     return lastValueFrom(
       this.http
-        .get<{ data: { user: AuthUser } }>('http://localhost:8000/api/auth/me', {
+        .get<{ data: { user: AuthUser } }>('/api/auth/me', {
           headers: { Authorization: `Bearer ${this.getToken()}` },
         })
         .pipe(
@@ -94,7 +94,7 @@ export class AuthService {
     // But since our router handles it, we can try POST and check backend routes
     return lastValueFrom(
       this.http
-        .post<{ data: AuthUser }>('http://localhost:8000/api/auth/me', formData, {
+        .post<{ data: AuthUser }>('/api/auth/me', formData, {
           headers: { Authorization: `Bearer ${this.getToken()}` },
         })
         .pipe(

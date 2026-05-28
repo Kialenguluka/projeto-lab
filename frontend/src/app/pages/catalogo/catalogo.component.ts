@@ -7,6 +7,7 @@ import { ProductItem, ProductService, ProductCollection } from '../../core/servi
 import { PropertyCardComponent } from '../../components/property-card/property-card.component';
 import { FooterComponent } from '../../layout/footer.component';
 import { HeaderComponent } from '../../layout/header.component';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-catalogo',
@@ -24,6 +25,7 @@ export class CatalogoComponent implements OnInit {
   private readonly productService = inject(ProductService);
   private readonly categoryService = inject(CategoryService);
   private readonly route = inject(ActivatedRoute);
+  private readonly languageService = inject(LanguageService);
 
   categories: CategoryItem[] = [];
   products: ProductItem[] = [];
@@ -115,7 +117,7 @@ export class CatalogoComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.errorMessage = 'Nao foi possivel carregar os produtos. Confirme se a API esta ligada.';
+        this.errorMessage = this.t('catalogError');
         this.loading = false;
       },
     });
@@ -175,11 +177,19 @@ export class CatalogoComponent implements OnInit {
   }
 
   productName(product: ProductItem): string {
-    return product.name_pt || product.name_en;
+    return this.languageService.text(product.name_pt, product.name_en);
   }
 
   productDescription(product: ProductItem): string {
-    return product.description_pt || product.description_en || '';
+    return this.languageService.text(product.description_pt, product.description_en);
+  }
+
+  categoryName(category: CategoryItem): string {
+    return this.languageService.text(category.name_pt, category.name_en);
+  }
+
+  t(key: string): string {
+    return this.languageService.t(key);
   }
 
   isPromotion(product: ProductItem): boolean {

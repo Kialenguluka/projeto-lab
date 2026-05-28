@@ -5,13 +5,26 @@
 
       <div class="hidden items-center gap-3 md:flex">
         <button type="button" class="text-sm font-semibold">AOA</button>
-        <button
-          type="button"
-          (click)="toggleMenu($event, 'language')"
-          class="rounded-md px-2 py-1 text-sm font-semibold hover:bg-white/10"
-        >
-          {{ language.flag }}
-        </button>
+        <div class="relative">
+          <button
+            type="button"
+            (click)="toggleMenu($event, 'language')"
+            class="rounded-md px-2 py-1 text-sm font-semibold hover:bg-white/10"
+          >
+            {{ language.flag }}
+          </button>
+          <div *ngIf="openMenu === 'language'" class="absolute right-0 z-50 mt-2 w-40 overflow-hidden rounded-xl border border-white/15 bg-slate-950/95 shadow-2xl backdrop-blur-xl">
+            <button
+              *ngFor="let lang of languages"
+              type="button"
+              (click)="pickLanguage(lang, $event)"
+              class="flex w-full items-center justify-between px-4 py-2 text-left text-sm text-white hover:bg-white/10"
+            >
+              <span>{{ lang.name }}</span>
+              <span class="text-xs uppercase text-white/70">{{ lang.flag }}</span>
+            </button>
+          </div>
+        </div>
         <button
           type="button"
           class="inline-flex h-9 w-9 items-center justify-center rounded-full hover:bg-white/10"
@@ -25,7 +38,7 @@
         
         <div *ngIf="isAuthenticated && authUser" class="flex items-center gap-2 px-2 border-l border-white/20 ml-2">
           <div class="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center text-[10px] font-bold overflow-hidden border border-white/10">
-            <img *ngIf="authUser.avatar" [src]="'http://localhost:8000/' + authUser.avatar" class="w-full h-full object-cover" />
+            <img *ngIf="authUser.avatar" [src]="'/' + authUser.avatar" class="w-full h-full object-cover" />
             <span *ngIf="!authUser.avatar">{{ authUser.name.charAt(0).toUpperCase() }}</span>
           </div>
           <span class="text-xs font-semibold">{{ authUser.name }}</span>

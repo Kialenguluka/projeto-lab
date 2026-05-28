@@ -6,14 +6,14 @@
   <div class="flex flex-1 items-center justify-center px-4 py-8">
     <div class="w-full max-w-md rounded-lg border bg-card shadow-sm">
       <div class="space-y-1 border-b p-6 text-center">
-        <h1 class="text-2xl font-semibold">Criar conta</h1>
-        <p class="text-sm text-muted-foreground">Preencha os dados abaixo para criar a sua conta</p>
+        <h1 class="text-2xl font-semibold">{{ t('authCreateAccountTitle') }}</h1>
+        <p class="text-sm text-muted-foreground">{{ t('authCreateAccountSubtitle') }}</p>
       </div>
       <div class="p-6">
         @if (!isSuccess) {
           <form (ngSubmit)="onSubmit($event)" class="space-y-4">
             <div class="mb-4">
-              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Foto de Perfil</label>
+              <label class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('authProfilePicture') }}</label>
               <div class="flex items-center gap-4">
                 <div class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden border dark:border-gray-700">
                   <svg *ngIf="!selectedFile" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -24,15 +24,15 @@
             </div>
 
             <div class="mb-4">
-              <label for="name" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">Nome completo</label>
+              <label for="name" class="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('authFullName') }}</label>
               <input id="name" [(ngModel)]="name" name="name" required placeholder="O seu nome" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
             </div>
             <div class="space-y-2">
-              <label for="email" class="text-sm font-medium">Email</label>
+              <label for="email" class="text-sm font-medium">{{ t('authEmail') }}</label>
               <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="seu@email.com" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
             </div>
             <div class="space-y-2">
-              <label for="password" class="text-sm font-medium">Palavra-passe</label>
+              <label for="password" class="text-sm font-medium">{{ t('authPassword') }}</label>
               <div class="relative">
                 <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm" />
                 <button type="button" (click)="showPassword = !showPassword" class="absolute right-0 top-0 flex h-10 w-10 items-center justify-center text-muted-foreground">
@@ -42,21 +42,21 @@
               </div>
             </div>
             <div class="space-y-2">
-              <label for="confirmPassword" class="text-sm font-medium">Confirmar palavra-passe</label>
+              <label for="confirmPassword" class="text-sm font-medium">{{ t('authConfirmPassword') }}</label>
               <input id="confirmPassword" type="password" [(ngModel)]="confirmPassword" name="confirmPassword" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
             </div>
             <label class="flex items-start gap-2 text-sm text-muted-foreground">
               <input type="checkbox" [(ngModel)]="acceptTerms" name="terms" class="mt-1 h-4 w-4 rounded border-input" />
-              <span>Aceito os <a routerLink="/termos" class="text-primary hover:underline">Termos de Servico</a> e a <a routerLink="/privacidade" class="text-primary hover:underline">Politica de Privacidade</a></span>
+              <span>{{ t('authAcceptTerms') }} <a routerLink="/termos" class="text-primary hover:underline">{{ t('authTermsOfService') }}</a> {{ t('authAnd') }} <a routerLink="/privacidade" class="text-primary hover:underline">{{ t('authPrivacyPolicy') }}</a></span>
             </label>
             <button type="submit" [disabled]="isLoading || !acceptTerms" class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50">
-              {{ isLoading ? 'A criar conta...' : 'Criar conta' }}
+              {{ isLoading ? t('authCreatingAccount') : t('authCreateAccount') }}
             </button>
             @if (errorMessage) {
               <p class="rounded-md bg-destructive/10 px-3 py-2 text-center text-sm text-destructive">{{ errorMessage }}</p>
             }
             <p class="text-center text-sm text-muted-foreground">
-              Ja tem uma conta? <a routerLink="/auth/login" class="text-primary hover:underline">Iniciar sessao</a>
+              {{ t('authAlreadyHaveAccount') }} <a routerLink="/auth/login" class="text-primary hover:underline">{{ t('authSignInHere') }}</a>
             </p>
           </form>
         } @else {
@@ -65,11 +65,11 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-green-600 dark:text-green-500"><path d="M20 6 9 17l-5-5"/></svg>
             </div>
             <div class="space-y-2">
-              <h3 class="text-xl font-bold">Conta criada com sucesso!</h3>
-              <p class="text-muted-foreground">A sua conta foi registada. Já pode iniciar sessão na plataforma para começar a comprar.</p>
+              <h3 class="text-xl font-bold">{{ t('authAccountCreated') }}</h3>
+              <p class="text-muted-foreground">{{ t('authAccountCreatedText') }}</p>
             </div>
             <a routerLink="/auth/login" class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90">
-              Iniciar Sessão
+              {{ t('authSignInHere') }}
             </a>
           </div>
         }
@@ -78,6 +78,6 @@
   </div>
 
   <div class="py-4 text-center">
-    <a routerLink="/" class="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white">Voltar a pagina inicial</a>
+    <a routerLink="/" class="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white">{{ t('authBackHome') }}</a>
   </div>
 </div>

@@ -64,8 +64,18 @@ class Response {
 
     private static function send(array $body, int $code): void {
         http_response_code($code);
+        header_remove('Connection');
+        header_remove('Keep-Alive');
         header('Content-Type: application/json; charset=utf-8');
-        echo json_encode($body, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        header('Connection: keep-alive');
+        header('Keep-Alive: timeout=10, max=100');
+
+        $payload = json_encode($body, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
+        if ($payload === false) {
+            $payload = json_encode(['success' => false, 'message' => 'Response serialization failed'], JSON_UNESCAPED_UNICODE);
+        }
+        header('Content-Length: ' . strlen($payload));
+        echo $payload;
         exit;
     }
 }

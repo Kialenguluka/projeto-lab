@@ -2,8 +2,8 @@
 
 <main class="container mx-auto px-4 py-8 min-h-screen">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold dark:text-white">O Meu Perfil</h1>
-    <p class="text-gray-500 dark:text-gray-400 mt-1">Gerencie as suas informações pessoais e preferências</p>
+    <h1 class="text-3xl font-bold dark:text-white">{{ t('profileMyProfile') }}</h1>
+    <p class="text-gray-500 dark:text-gray-400 mt-1">{{ t('profileManageInfo') }}</p>
   </div>
 
   <!-- Tabs -->
@@ -13,21 +13,21 @@
       [class]="activeTab === 'profile'
         ? 'px-5 py-3 text-sm font-medium border-b-2 border-primary text-primary'
         : 'px-5 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
-      Dados Pessoais
+      {{ t('profilePersonalDataTab') }}
     </button>
     <button
       (click)="activeTab = 'security'"
       [class]="activeTab === 'security'
         ? 'px-5 py-3 text-sm font-medium border-b-2 border-primary text-primary'
         : 'px-5 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
-      Segurança
+      {{ t('profileSecurityTab') }}
     </button>
     <button
       (click)="activeTab = 'preferences'"
       [class]="activeTab === 'preferences'
         ? 'px-5 py-3 text-sm font-medium border-b-2 border-primary text-primary'
         : 'px-5 py-3 text-sm font-medium text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
-      Preferências
+      {{ t('profilePreferencesTab') }}
     </button>
   </div>
 
@@ -36,7 +36,7 @@
     <!-- Dados Pessoais -->
     @if (activeTab === 'profile') {
       <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-        <h2 class="text-lg font-semibold dark:text-white mb-6">Informações Pessoais</h2>
+        <h2 class="text-lg font-semibold dark:text-white mb-6">{{ t('profilePersonalData') }}</h2>
 
         @if (profileMessage) {
           <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
@@ -66,14 +66,14 @@
               </label>
             </div>
             <div>
-              <h4 class="font-bold dark:text-white">Foto de Perfil</h4>
-              <p class="text-xs text-gray-500 mb-2">Clique na imagem para alterar o seu avatar.</p>
-              <button type="button" (click)="onProfileSave($event)" *ngIf="selectedFile" class="px-3 py-1 bg-primary text-white text-[10px] font-bold rounded-lg animate-bounce">Guardar Nova Foto</button>
+              <h4 class="font-bold dark:text-white">{{ t('authProfilePicture') }}</h4>
+              <p class="text-xs text-gray-500 mb-2">{{ t('profileAvatarInfo') }}</p>
+              <button type="button" (click)="onProfileSave($event)" *ngIf="selectedFile" class="px-3 py-1 bg-primary text-white text-[10px] font-bold rounded-lg animate-bounce">{{ t('profileSaveNewPhoto') }}</button>
             </div>
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nome Completo</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ t('authFullName') }}</label>
             <input
               id="profile-name"
               type="text"
@@ -83,7 +83,7 @@
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ t('authEmail') }}</label>
             <input
               id="profile-email"
               type="email"
@@ -96,7 +96,7 @@
             type="submit"
             [disabled]="loadingProfile"
             class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
-            @if (loadingProfile) { A guardar... } @else { Guardar Alterações }
+            {{ loadingProfile ? t('authChangingPassword') : t('profileSaveChanges') }}
           </button>
         </form>
       </div>
@@ -105,7 +105,7 @@
     <!-- Segurança -->
     @if (activeTab === 'security') {
       <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-        <h2 class="text-lg font-semibold dark:text-white mb-6">Alterar Palavra-passe</h2>
+        <h2 class="text-lg font-semibold dark:text-white mb-6">{{ t('profilePasswordChange') }}</h2>
 
         @if (passwordMessage) {
           <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
@@ -120,7 +120,7 @@
 
         <form (ngSubmit)="onPasswordChange($event)" class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Palavra-passe Atual</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ t('authCurrentPassword') }}</label>
             <input
               id="password-current"
               type="password"
@@ -130,7 +130,7 @@
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Nova Palavra-passe</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ t('authNewPassword') }}</label>
             <input
               id="password-new"
               type="password"
@@ -141,7 +141,7 @@
               class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary focus:border-transparent">
           </div>
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Confirmar Nova Palavra-passe</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{{ t('authConfirmNewPassword') }}</label>
             <input
               id="password-confirm"
               type="password"
@@ -154,7 +154,7 @@
             type="submit"
             [disabled]="loadingPassword"
             class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity disabled:opacity-50">
-            @if (loadingPassword) { A alterar... } @else { Alterar Palavra-passe }
+            {{ loadingPassword ? t('authChangingPassword') : t('authChangePasswordButton') }}
           </button>
         </form>
       </div>
@@ -163,7 +163,7 @@
     <!-- Preferências -->
     @if (activeTab === 'preferences') {
       <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-        <h2 class="text-lg font-semibold dark:text-white mb-6">Preferências</h2>
+        <h2 class="text-lg font-semibold dark:text-white mb-6">{{ t('profilePreferences') }}</h2>
 
         @if (prefMessage) {
           <div class="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg text-green-700 dark:text-green-400 text-sm">
@@ -174,7 +174,7 @@
         <div class="space-y-6">
           <!-- Idioma -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Idioma</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('profileLanguage') }}</label>
             <select
               id="pref-language"
               [(ngModel)]="preferences.language"
@@ -187,7 +187,7 @@
 
           <!-- Moeda -->
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Moeda Preferida</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{{ t('profilePreferredCurrency') }}</label>
             <select id="currency" name="currency" [(ngModel)]="preferences.currency" class="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-primary focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white">
               <option value="AOA">Kwanza Angolano (AOA)</option>
             </select>
@@ -196,8 +196,8 @@
           <!-- Dark Mode -->
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Modo Escuro</p>
-              <p class="text-xs text-gray-500 dark:text-gray-400">Ativar interface em tons escuros</p>
+              <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('profileDarkMode') }}</p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">{{ t('profileDarkModeDescription') }}</p>
             </div>
             <label class="relative inline-flex items-center cursor-pointer">
               <input
@@ -214,7 +214,7 @@
             type="button"
             (click)="savePreferences()"
             class="w-full py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
-            Guardar Preferências
+            {{ t('profileSavePreferences') }}
           </button>
         </div>
       </div>

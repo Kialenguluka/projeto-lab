@@ -6,6 +6,7 @@ import { ApiService } from '../../core/services/api.service';
 import { ExportService } from '../../core/services/export.service';
 import { FooterComponent } from '../../layout/footer.component';
 import { HeaderComponent } from '../../layout/header.component';
+import { LanguageService } from '../../core/services/language.service';
 
 type OrderStatus = 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
 
@@ -34,8 +35,8 @@ export interface Order {
     <app-header />
     <main class="container mx-auto px-4 py-8 min-h-screen">
       <div class="mb-8">
-        <h1 class="text-3xl font-bold dark:text-white">As Minhas Encomendas</h1>
-        <p class="text-gray-500 dark:text-gray-400 mt-1">Histórico de todas as suas compras</p>
+        <h1 class="text-3xl font-bold dark:text-white">{{ t('ordersMyOrders') }}</h1>
+        <p class="text-gray-500 dark:text-gray-400 mt-1">{{ t('ordersHistory') }}</p>
       </div>
 
       <!-- Status Filter -->
@@ -61,10 +62,10 @@ export interface Order {
       } @else if (filteredOrders.length === 0) {
         <div class="text-center py-16">
           <div class="text-6xl mb-4">📦</div>
-          <h2 class="text-xl font-semibold dark:text-white mb-2">Nenhuma encomenda encontrada</h2>
-          <p class="text-gray-500 dark:text-gray-400 mb-6">Faça a sua primeira compra no nosso catálogo.</p>
+          <h2 class="text-xl font-semibold dark:text-white mb-2">{{ t('noOrdersFound') }}</h2>
+          <p class="text-gray-500 dark:text-gray-400 mb-6">{{ t('ordersNoneYet') }}</p>
           <a routerLink="/catalogo" class="inline-block px-6 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity">
-            Ver Produtos
+            {{ t('viewProducts') }}
           </a>
         </div>
       } @else {
@@ -75,7 +76,7 @@ export interface Order {
               @if (order.status === 'pending') {
                 <div class="bg-yellow-50 dark:bg-yellow-900/20 px-6 py-2 border-b border-yellow-100 dark:border-yellow-900/30 flex items-center gap-2">
                   <span class="w-2 h-2 rounded-full bg-yellow-400 animate-pulse"></span>
-                  <p class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400 uppercase tracking-wider">Aguardando confirmação de pagamento ({{ paymentLabel(order.payment_method) }})</p>
+                  <p class="text-[10px] font-bold text-yellow-700 dark:text-yellow-400 uppercase tracking-wider">{{ t('pendingPaymentNotice') }} ({{ paymentLabel(order.payment_method) }})</p>
                 </div>
               }
 
@@ -95,16 +96,16 @@ export interface Order {
                     <div class="flex gap-2 mt-4 justify-end">
                       <a [routerLink]="['/encomendas', order.id]"
                          class="px-5 py-2 text-xs font-bold border border-gray-200 dark:border-gray-700 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-800 dark:text-white transition-all">
-                        Detalhes
+                        {{ t('viewDetails') }}
                       </a>
                       <button (click)="exportPdf(order)"
                               class="px-5 py-2 text-xs font-bold bg-neutral-900 dark:bg-white dark:text-black text-white rounded-xl hover:scale-105 transition-all">
-                        📄 Fatura
+                        {{ t('invoice') }}
                       </button>
                       @if (order.status === 'pending') {
                         <button (click)="cancelOrder(order)"
                                 class="px-5 py-2 text-xs font-bold border border-red-200 text-red-600 rounded-xl hover:bg-red-50 transition-all">
-                          Cancelar
+                          {{ t('cancel') }}
                         </button>
                       }
                     </div>
@@ -123,20 +124,23 @@ export interface Order {
 })
 export class EncomendasComponent implements OnInit {
   private readonly api = inject(ApiService);
+  private readonly languageService = inject(LanguageService);
 
   orders: Order[] = [];
   loading = false;
   errorMessage = '';
   statusFilter = 'all';
 
-  readonly statusOptions = [
-    { value: 'all',       label: 'Todos' },
-    { value: 'pending',   label: 'Pendente' },
-    { value: 'paid',      label: 'Paga' },
-    { value: 'shipped',   label: 'Enviada' },
-    { value: 'delivered', label: 'Entregue' },
-    { value: 'cancelled', label: 'Cancelada' },
-  ];
+  get statusOptions(): { value: string; label: string }[] {
+    return [
+      { value: 'all', label: this.t('allOrders') },
+      { value: 'pending', label: this.t('pendingOrdersLabel') },
+      { value: 'paid', label: this.t('confirmedOrdersLabel') },
+      { value: 'shipped', label: this.t('statusShipped') },
+      { value: 'delivered', label: this.t('deliveredOrdersLabel') },
+      { value: 'cancelled', label: this.t('cancelledOrdersLabel') },
+    ];
+  }
 
   ngOnInit(): void {
     this.loadOrders();
@@ -183,18 +187,18 @@ export class EncomendasComponent implements OnInit {
 
   exportPdf(order: Order): void {
     const token = localStorage.getItem('mini_ecommerce_token');
-    const url = `http://localhost:8000/api/orders/${order.id}/export?token=${token}`;
+    const url = `/api/orders/${order.id}/export?token=${token}`;
     window.open(url, '_blank');
   }
 
   statusLabel(s: string): string {
     const m: Record<string, string> = {
-      pending:    'Pendente',
-      paid:       'Paga',
-      processing: 'Em Processamento',
-      shipped:    'Enviada',
-      delivered:  'Entregue',
-      cancelled:  'Cancelada',
+      pending: this.t('pendingOrdersLabel'),
+      paid: this.t('confirmedOrdersLabel'),
+      processing: this.t('statusProcessing'),
+      shipped: this.t('statusShipped'),
+      delivered: this.t('deliveredOrdersLabel'),
+      cancelled: this.t('cancelledOrdersLabel'),
     };
     return m[s] ?? s;
   }
@@ -213,6 +217,13 @@ export class EncomendasComponent implements OnInit {
   }
 
   paymentLabel(p: string): string {
+    const labels: Record<string, string> = {
+      cash: this.t('paymentCash'),
+      transfer: this.t('paymentTransfer'),
+      card: this.t('paymentCard'),
+    };
+    return labels[p] ?? p;
+
     const m: Record<string, string> = {
       cash: 'Numerário',
       transfer: 'Transferência',
@@ -222,6 +233,12 @@ export class EncomendasComponent implements OnInit {
   }
 
   formatDate(d: string): string {
+    return new Date(d).toLocaleDateString(this.languageService.locale(), { year: 'numeric', month: 'long', day: 'numeric' });
+
     return new Date(d).toLocaleDateString('pt-PT', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  t(key: string): string {
+    return this.languageService.t(key);
   }
 }

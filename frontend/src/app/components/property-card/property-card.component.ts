@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { FavoritesService } from '../../core/services/favorites.service';
 import { ProductItem } from '../../core/services/product.service';
 import { ExchangeRateService } from '../../core/services/exchange-rate.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-property-card',
@@ -14,6 +15,7 @@ import { ExchangeRateService } from '../../core/services/exchange-rate.service';
 export class PropertyCardComponent implements OnInit {
   private readonly favorites = inject(FavoritesService);
   public readonly exchangeRate = inject(ExchangeRateService);
+  private readonly languageService = inject(LanguageService);
 
   @Input({ required: true }) product!: ProductItem;
   @Input() promotion = false;
@@ -31,11 +33,15 @@ export class PropertyCardComponent implements OnInit {
   }
 
   get name(): string {
-    return this.product.name_pt || this.product.name_en;
+    return this.languageService.text(this.product.name_pt, this.product.name_en);
   }
 
   get description(): string {
-    return this.product.description_pt || this.product.description_en || 'Produto disponivel na loja.';
+    return this.languageService.text(
+      this.product.description_pt,
+      this.product.description_en,
+      this.languageService.t('productAvailableInStore'),
+    );
   }
 
   get image(): string {

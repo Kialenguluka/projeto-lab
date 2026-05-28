@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../layout/header.component';
 import { FooterComponent } from '../../layout/footer.component';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-sobre',
@@ -10,21 +11,27 @@ import { FooterComponent } from '../../layout/footer.component';
   templateUrl: './sobre.component.html',
 })
 export class SobreComponent {
+  private readonly languageService = inject(LanguageService);
+
   features = [
     {
-      title: 'Inovação Angolana',
-      description: 'Nascemos da vontade de modernizar o comércio digital em Angola, unindo tecnologia de ponta com as necessidades locais.',
+      titleKey: 'aboutFeatureInnovationTitle',
+      descriptionKey: 'aboutFeatureInnovationText',
       icon: 'sparkles'
     },
     {
-      title: 'Segurança Garantida',
-      description: 'Implementamos os mais rigorosos padrões de segurança para garantir que cada transação e dado pessoal esteja protegido.',
+      titleKey: 'aboutFeatureSecurityTitle',
+      descriptionKey: 'aboutFeatureSecurityText',
       icon: 'shield-check'
     },
     {
-      title: 'Entrega Eficiente',
-      description: 'Uma rede logística otimizada para que os seus produtos cheguem à sua porta com rapidez e cuidado.',
+      titleKey: 'aboutFeatureDeliveryTitle',
+      descriptionKey: 'aboutFeatureDeliveryText',
       icon: 'truck'
     }
   ];
+
+  t(key: string): string {
+    return this.languageService.t(key);
+  }
 }

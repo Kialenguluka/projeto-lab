@@ -21,3 +21,4 @@ frontend/src/assets/products/*
 # Environment
 .env
 config.local.php
+node_modules

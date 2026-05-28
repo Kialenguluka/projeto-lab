@@ -9,7 +9,7 @@ export interface ApiResponse<T> {
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private readonly baseUrl = 'http://localhost:8000/api';
+  private readonly baseUrl = '/api';
   private readonly http = inject(HttpClient);
 
   private getHeaders(): HttpHeaders {

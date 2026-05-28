@@ -4,6 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { CartItem, CartService } from '../../core/services/cart.service';
 import { FooterComponent } from '../../layout/footer.component';
 import { HeaderComponent } from '../../layout/header.component';
+import { LanguageService } from '../../core/services/language.service';
 import { CheckoutModalComponent } from '../../components/checkout-modal/checkout-modal.component';
 
 @Component({
@@ -22,6 +23,11 @@ export class CarrinhoComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   showCheckoutModal = false;
+  private readonly languageService = inject(LanguageService);
+
+  t(key: string): string {
+    return this.languageService.t(key);
+  }
 
   ngOnInit(): void {
     this.loadCart();
@@ -37,7 +43,7 @@ export class CarrinhoComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.errorMessage = 'Inicie sessao para ver o seu carrinho.';
+        this.errorMessage = this.t('cartLoadAuthError');
         this.loading = false;
       },
     });
@@ -48,7 +54,7 @@ export class CarrinhoComponent implements OnInit {
     this.cartService.updateItem(item.id, nextQuantity).subscribe({
       next: (cart) => this.applyCart(cart.items, cart.total),
       error: () => {
-        this.errorMessage = 'Nao foi possivel atualizar o carrinho.';
+        this.errorMessage = this.t('cartUpdateError');
       },
     });
   }
@@ -57,14 +63,14 @@ export class CarrinhoComponent implements OnInit {
     this.cartService.removeItem(id).subscribe({
       next: (cart) => this.applyCart(cart.items, cart.total),
       error: () => {
-        this.errorMessage = 'Nao foi possivel remover o produto.';
+        this.errorMessage = this.t('cartRemoveError');
       },
     });
   }
 
   openCheckout(): void {
     if (this.cartItems.length === 0) {
-      this.errorMessage = 'Carrinho vazio';
+      this.errorMessage = this.t('cartEmptyError');
       return;
     }
     this.showCheckoutModal = true;
@@ -82,7 +88,7 @@ export class CarrinhoComponent implements OnInit {
         void this.router.navigate(['/checkout/sucesso'], { queryParams: { orderId: order.orderId } });
       },
       error: () => {
-        this.errorMessage = 'Nao foi possivel finalizar a compra.';
+        this.errorMessage = this.t('cartCheckoutError');
       },
     });
   }
@@ -105,7 +111,7 @@ export class CarrinhoComponent implements OnInit {
   }
 
   itemName(item: CartItem): string {
-    return item.name_pt || item.name_en;
+    return this.languageService.text(item.name_pt, item.name_en);
   }
 
   itemImage(item: CartItem): string {

@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-auth-login',
@@ -13,12 +14,17 @@ import { AuthService } from '../../core/services/auth.service';
 export class AuthLoginComponent {
   private readonly auth = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly languageService = inject(LanguageService);
 
   email = '';
   password = '';
   showPassword = false;
   isLoading = false;
   errorMessage = '';
+
+  t(key: string): string {
+    return this.languageService.t(key);
+  }
 
   async onSubmit(ev: Event): Promise<void> {
     ev.preventDefault();

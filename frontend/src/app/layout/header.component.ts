@@ -148,7 +148,7 @@ export class HeaderComponent implements OnDestroy {
   }
 
   logout(): void {
-    if (confirm('Tem a certeza que deseja sair do sistema?')) {
+    if (confirm(this.t('logoutConfirm'))) {
       this.auth.logout();
       void this.router.navigate(['/']);
     }

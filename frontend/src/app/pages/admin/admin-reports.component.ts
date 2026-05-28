@@ -128,7 +128,7 @@ export class AdminReportsComponent implements OnInit {
   stats: Stats | null = null;
   loading = false;
   errorMessage = '';
-  readonly apiBase = 'http://localhost:8000/api';
+  readonly apiBase = '/api';
   token = localStorage.getItem('mini_ecommerce_token') ?? '';
 
   ngOnInit(): void {

@@ -12,7 +12,7 @@
           type="search"
           [(ngModel)]="searchQuery"
           (keyup.enter)="applyFilters()"
-          placeholder="Pesquisar produtos..."
+          [placeholder]="t('searchProducts')"
           class="w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 py-3 pl-12 pr-4 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
         />
       </div>
@@ -21,17 +21,17 @@
           [(ngModel)]="sortBy"
           class="h-11 w-full rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-4 text-sm text-gray-900 dark:text-white md:w-56 focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
         >
-          <option value="recommended">Recomendados</option>
-          <option value="price-low">Preço: Baixo a Alto</option>
-          <option value="price-high">Preço: Alto a Baixo</option>
-          <option value="stock">Mais Stock</option>
+          <option value="recommended">{{ t('recommended') }}</option>
+          <option value="price-low">{{ t('priceLowToHigh') }}</option>
+          <option value="price-high">{{ t('priceHighToLow') }}</option>
+          <option value="stock">{{ t('moreStock') }}</option>
         </select>
         <button
           type="button"
           (click)="mobileFiltersOpen = true"
           class="inline-flex h-11 items-center gap-2 rounded-xl bg-gray-200 dark:bg-gray-700 px-5 text-sm font-medium text-gray-800 dark:text-gray-200 md:hidden"
         >
-          Filtros
+          {{ t('filters') }}
         </button>
         <!-- Desktop Search Button -->
         <button
@@ -39,7 +39,7 @@
           (click)="applyFilters()"
           class="hidden md:inline-flex h-11 items-center gap-2 rounded-xl bg-primary px-6 text-sm font-bold text-white hover:opacity-90 shadow-sm"
         >
-          Pesquisar
+          {{ t('search') }}
         </button>
       </div>
     </div>
@@ -51,7 +51,7 @@
         (click)="$event.stopPropagation()"
       >
         <div class="mb-6 flex items-center justify-between">
-          <h2 class="text-xl font-bold dark:text-white">Filtros</h2>
+          <h2 class="text-xl font-bold dark:text-white">{{ t('filters') }}</h2>
           <button type="button" class="text-gray-500 hover:text-gray-800 dark:hover:text-gray-200" (click)="closeMobileFilters()">
             <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
@@ -65,7 +65,7 @@
         <div class="sticky top-24 rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 shadow-sm">
           <h3 class="mb-5 text-lg font-bold dark:text-white flex items-center gap-2">
             <svg class="w-5 h-5 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
-            Filtros
+            {{ t('filters') }}
           </h3>
           <ng-container *ngTemplateOutlet="filterContent" />
         </div>
@@ -75,9 +75,9 @@
         <div class="mb-6 flex items-center justify-between">
           <h1 class="text-xl md:text-2xl font-bold dark:text-white">
             @if (loading) {
-              A carregar...
+              {{ t('loadingProducts') }}
             } @else {
-              {{ totalItems }} {{ promotionsOnly ? 'promoções' : 'produtos' }}
+              {{ totalItems }} {{ promotionsOnly ? t('promotions') : t('products') }}
             }
           </h1>
         </div>
@@ -96,10 +96,10 @@
             <div class="mx-auto w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
               <svg class="h-10 w-10 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
-            <h3 class="mb-2 text-xl font-bold dark:text-white">Nenhum produto encontrado</h3>
-            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">Tente ajustar os filtros, limpar a categoria ou pesquisar por outro termo.</p>
+            <h3 class="mb-2 text-xl font-bold dark:text-white">{{ t('noProductsFound') }}</h3>
+            <p class="text-gray-500 dark:text-gray-400 max-w-md mx-auto">{{ t('tryDifferentFilters') }}</p>
             <button (click)="searchQuery=''; selectedCategories=[]; priceMin=0; priceMax=500000; applyFilters()" class="mt-6 text-primary font-medium hover:underline">
-              Limpar todos os filtros
+              {{ t('clearAllFilters') }}
             </button>
           </div>
         } @else {
@@ -150,7 +150,7 @@
 <ng-template #filterContent>
   <div class="space-y-8">
     <div>
-      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Categorias</h4>
+      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('categories') }}</h4>
       <div class="space-y-3">
         @for (category of categories; track category.id) {
           <label class="flex cursor-pointer items-center gap-3 text-sm group">
@@ -161,7 +161,7 @@
               class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700"
             />
             <span class="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors font-medium">
-              {{ category.name_pt || category.name_en }}
+              {{ categoryName(category) }}
             </span>
           </label>
         }
@@ -171,14 +171,14 @@
     <hr class="border-gray-200 dark:border-gray-700">
 
     <div>
-      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Preço (AOA)</h4>
+      <h4 class="mb-4 text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">{{ t('priceAoA') }}</h4>
       <div class="grid grid-cols-2 gap-3">
         <label class="text-xs text-gray-500">
-          Mínimo
+          {{ t('minimum') }}
           <input type="number" [(ngModel)]="priceMin" class="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
         </label>
         <label class="text-xs text-gray-500">
-          Máximo
+          {{ t('maximum') }}
           <input type="number" [(ngModel)]="priceMax" class="mt-1 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary dark:text-white" />
         </label>
       </div>
@@ -189,14 +189,14 @@
     <div>
       <label class="flex cursor-pointer items-center gap-3 text-sm group">
         <input type="checkbox" [(ngModel)]="showOnlyAvailable" class="h-5 w-5 rounded border-gray-300 text-primary focus:ring-primary dark:border-gray-600 dark:bg-gray-700" />
-        <span class="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors font-medium">Apenas produtos com stock</span>
+        <span class="text-gray-700 dark:text-gray-300 group-hover:text-primary transition-colors font-medium">{{ t('onlyAvailableStock') }}</span>
       </label>
     </div>
 
     <button
       (click)="applyFilters()"
       class="w-full py-3 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-white rounded-xl font-bold transition-colors">
-      Aplicar Filtros
+      {{ t('applyFilters') }}
     </button>
   </div>
 </ng-template>

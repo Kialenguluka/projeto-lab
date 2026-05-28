@@ -5,6 +5,7 @@ import { ApiService } from '../../core/services/api.service';
 import { ExportService } from '../../core/services/export.service';
 import { FooterComponent } from '../../layout/footer.component';
 import { HeaderComponent } from '../../layout/header.component';
+import { LanguageService } from '../../core/services/language.service';
 
 interface OrderItem {
   product_id: number;
@@ -36,7 +37,7 @@ interface OrderDetail {
     <app-header />
     <main class="container mx-auto px-4 py-8 min-h-screen">
       <a routerLink="/encomendas" class="inline-flex items-center gap-2 text-sm text-primary hover:underline mb-6">
-        ← Voltar às Encomendas
+        {{ t('backToOrders') }}
       </a>
 
       @if (loading) {
@@ -55,9 +56,9 @@ interface OrderDetail {
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
               <div class="flex flex-wrap items-start justify-between gap-4 mb-4">
                 <div>
-                  <h1 class="text-2xl font-bold dark:text-white">Encomenda #{{ order.id }}</h1>
+                  <h1 class="text-2xl font-bold dark:text-white">{{ t('orderNumber') }}{{ order.id }}</h1>
                   <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">
-                    Criada em {{ formatDate(order.created_at) }}
+                    {{ t('createdOn') }} {{ formatDate(order.created_at) }}
                   </p>
                 </div>
                 <span [class]="statusClass(order.status)" class="px-3 py-1 rounded-full text-sm font-semibold">
@@ -66,12 +67,12 @@ interface OrderDetail {
               </div>
               <div class="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p class="text-gray-500 dark:text-gray-400">Método de Pagamento</p>
+                  <p class="text-gray-500 dark:text-gray-400">{{ t('paymentMethodLabel') }}</p>
                   <p class="font-medium dark:text-white">{{ paymentLabel(order.payment_method) }}</p>
                 </div>
                 @if (order.notes) {
                   <div>
-                    <p class="text-gray-500 dark:text-gray-400">Notas</p>
+                    <p class="text-gray-500 dark:text-gray-400">{{ t('notesLabel') }}</p>
                     <p class="font-medium dark:text-white">{{ order.notes }}</p>
                   </div>
                 }
@@ -80,17 +81,17 @@ interface OrderDetail {
 
             <!-- Itens da Encomenda -->
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-              <h2 class="text-lg font-semibold dark:text-white mb-4">Itens da Encomenda</h2>
+              <h2 class="text-lg font-semibold dark:text-white mb-4">{{ t('orderItemsTitle') }}</h2>
               <div class="divide-y divide-gray-100 dark:divide-gray-700">
                 @for (item of order.items; track item.product_id) {
                   <div class="py-4 flex items-center justify-between">
                     <div>
-                      <p class="font-medium dark:text-white">{{ item.name_pt || item.name_en }}</p>
-                      <p class="text-sm text-gray-500 dark:text-gray-400">Quantidade: {{ item.quantity }}</p>
+                      <p class="font-medium dark:text-white">{{ itemName(item) }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('quantity') }}: {{ item.quantity }}</p>
                     </div>
                     <div class="text-right">
                       <p class="font-medium dark:text-white">AOA {{ item.unit_price | number:'1.2-2' }}</p>
-                      <p class="text-sm text-gray-500 dark:text-gray-400">Subtotal: AOA {{ (item.unit_price * item.quantity) | number:'1.2-2' }}</p>
+                      <p class="text-sm text-gray-500 dark:text-gray-400">{{ t('subtotal') }}: AOA {{ (item.unit_price * item.quantity) | number:'1.2-2' }}</p>
                     </div>
                   </div>
                 }
@@ -101,22 +102,22 @@ interface OrderDetail {
           <!-- Resumo -->
           <div class="space-y-4">
             <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6">
-              <h2 class="text-lg font-semibold dark:text-white mb-4">Resumo</h2>
+              <h2 class="text-lg font-semibold dark:text-white mb-4">{{ t('summaryTitle') }}</h2>
               <div class="space-y-3 text-sm">
                 @for (item of order.items; track item.product_id) {
                   <div class="flex justify-between text-gray-600 dark:text-gray-400">
-                    <span>{{ item.name_pt || item.name_en }} × {{ item.quantity }}</span>
+                    <span>{{ itemName(item) }} x {{ item.quantity }}</span>
                     <span>AOA {{ (item.unit_price * item.quantity) | number:'1.2-2' }}</span>
                   </div>
                 }
                 <hr class="border-gray-200 dark:border-gray-700">
                 <div class="flex justify-between font-bold text-lg dark:text-white">
-                  <span>Total</span>
+                  <span>{{ t('totalLabel') }}</span>
                   <span>AOA {{ order.total | number:'1.2-2' }}</span>
                 </div>
               </div>
               <button (click)="exportPdf()" class="w-full mt-6 px-4 py-3 bg-primary text-white rounded-lg hover:opacity-90 transition-opacity font-medium">
-                📄 Exportar PDF
+                {{ t('exportPdfButton') }}
               </button>
             </div>
           </div>
@@ -130,6 +131,7 @@ export class EncomendaDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly api = inject(ApiService);
   private readonly exportService = inject(ExportService);
+  private readonly languageService = inject(LanguageService);
 
   order: OrderDetail | null = null;
   loading = false;
@@ -159,17 +161,17 @@ export class EncomendaDetailComponent implements OnInit {
   exportPdf(): void {
     if (!this.order) return;
     const token = localStorage.getItem('mini_ecommerce_token');
-    const url = `http://localhost:8000/api/orders/${this.order.id}/export?token=${token}`;
+    const url = `/api/orders/${this.order.id}/export?token=${token}`;
     window.open(url, '_blank');
   }
 
   statusLabel(s: string): string {
     const m: Record<string, string> = {
-      pending:    'Pendente',
-      paid:       'Paga',
-      shipped:    'Enviada',
-      delivered:  'Entregue',
-      cancelled:  'Cancelada',
+      pending: this.t('pendingOrdersLabel'),
+      paid: this.t('confirmedOrdersLabel'),
+      shipped: this.t('statusShipped'),
+      delivered: this.t('deliveredOrdersLabel'),
+      cancelled: this.t('cancelledOrdersLabel'),
     };
     return m[s] ?? s;
   }
@@ -186,11 +188,24 @@ export class EncomendaDetailComponent implements OnInit {
   }
 
   paymentLabel(p: string): string {
+    const labels: Record<string, string> = { cash: this.t('paymentCash'), transfer: this.t('paymentTransfer'), card: this.t('paymentCard') };
+    return labels[p] ?? p;
+
     const m: Record<string, string> = { cash: 'Numerário', transfer: 'Transferência', card: 'Cartão' };
     return m[p] ?? p;
   }
 
   formatDate(d: string): string {
+    return new Date(d).toLocaleDateString(this.languageService.locale(), { year: 'numeric', month: 'long', day: 'numeric' });
+
     return new Date(d).toLocaleDateString('pt-PT', { year: 'numeric', month: 'long', day: 'numeric' });
+  }
+
+  itemName(item: OrderItem): string {
+    return this.languageService.text(item.name_pt, item.name_en);
+  }
+
+  t(key: string): string {
+    return this.languageService.t(key);
   }
 }

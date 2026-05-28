@@ -6,17 +6,17 @@
   <div class="flex flex-1 items-center justify-center px-4">
     <div class="w-full max-w-md rounded-lg border bg-card text-card-foreground shadow-sm">
       <div class="space-y-1 border-b p-6 text-center">
-        <h1 class="text-2xl font-semibold">Iniciar sessao</h1>
-        <p class="text-sm text-muted-foreground">Insira as suas credenciais para aceder a sua conta</p>
+        <h1 class="text-2xl font-semibold">{{ t('authLoginTitle') }}</h1>
+        <p class="text-sm text-muted-foreground">{{ t('authLoginSubtitle') }}</p>
       </div>
       <div class="p-6">
         <form (ngSubmit)="onSubmit($event)" class="space-y-4">
           <div class="space-y-2">
-            <label for="email" class="text-sm font-medium">Email</label>
+            <label for="email" class="text-sm font-medium">{{ t('authEmail') }}</label>
             <input id="email" type="email" [(ngModel)]="email" name="email" required placeholder="seu@email.com" class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm" />
           </div>
           <div class="space-y-2">
-            <label for="password" class="text-sm font-medium">Palavra-passe</label>
+            <label for="password" class="text-sm font-medium">{{ t('authPassword') }}</label>
             <div class="relative">
               <input id="password" [type]="showPassword ? 'text' : 'password'" [(ngModel)]="password" name="password" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 pr-10 text-sm" />
               <button type="button" (click)="showPassword = !showPassword" class="absolute right-0 top-0 flex h-10 w-10 items-center justify-center text-muted-foreground" aria-label="Mostrar palavra-passe">
@@ -25,16 +25,16 @@
               </button>
             </div>
           </div>
-          <a routerLink="/auth/forgot-password" class="text-sm text-primary hover:underline">Esqueceu a palavra-passe?</a>
+          <a routerLink="/auth/forgot-password" class="text-sm text-primary hover:underline">{{ t('authForgotPassword') }}</a>
           <button type="submit" [disabled]="isLoading" class="inline-flex h-10 w-full items-center justify-center rounded-md bg-primary text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50">
-            {{ isLoading ? 'A entrar...' : 'Iniciar sessao' }}
+            {{ isLoading ? t('authSigningIn') : t('authLoginTitle') }}
           </button>
           @if (errorMessage) {
             <p class="rounded-md bg-destructive/10 px-3 py-2 text-center text-sm text-destructive">{{ errorMessage }}</p>
           }
           <p class="text-center text-sm text-muted-foreground">
-            Nao tem uma conta?
-            <a routerLink="/auth/register" class="text-primary hover:underline">Registe-se</a>
+            {{ t('authNoAccount') }}
+            <a routerLink="/auth/register" class="text-primary hover:underline">{{ t('authRegisterLink') }}</a>
           </p>
         </form>
       </div>
@@ -42,6 +42,6 @@
   </div>
 
   <div class="py-4 text-center">
-    <a routerLink="/" class="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white">Voltar a pagina inicial</a>
+    <a routerLink="/" class="inline-flex items-center gap-2 text-sm text-white/80 hover:text-white">{{ t('authBackHome') }}</a>
   </div>
 </div>

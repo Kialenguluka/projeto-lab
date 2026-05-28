@@ -44,12 +44,16 @@ export class PerfilComponent implements OnInit {
   selectedFile: File | null = null;
   avatarUrl: string | null = null;
 
+  t(key: string): string {
+    return this.languageService.t(key);
+  }
+
   ngOnInit(): void {
     const user = this.authService.getUser();
     if (user) {
       this.profile.name = user.name;
       this.profile.email = user.email;
-      if (user.avatar) this.avatarUrl = 'http://localhost:8000/' + user.avatar;
+      if (user.avatar) this.avatarUrl = '/' + user.avatar;
     }
     // Try to refresh from server
     if (this.authService.isAuthenticated()) {
@@ -57,7 +61,7 @@ export class PerfilComponent implements OnInit {
         if (user) {
           this.profile.name = user.name;
           this.profile.email = user.email;
-          if (user.avatar) this.avatarUrl = 'http://localhost:8000/' + user.avatar;
+          if (user.avatar) this.avatarUrl = '/' + user.avatar;
         }
       }).catch(() => {});
     }

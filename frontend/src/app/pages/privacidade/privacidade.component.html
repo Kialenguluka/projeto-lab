@@ -1,52 +1,39 @@
 <app-header />
 
-<main class="min-h-screen bg-neutral-50 dark:bg-neutral-950 py-20">
+<main class="min-h-screen bg-neutral-50 py-20 dark:bg-neutral-950">
   <div class="container mx-auto px-6">
-    <div class="max-w-4xl mx-auto bg-white dark:bg-neutral-900 rounded-3xl p-10 md:p-16 border dark:border-neutral-800 shadow-sm">
-      <h1 class="text-4xl font-bold text-neutral-900 dark:text-white mb-8 border-b dark:border-neutral-800 pb-6">Política de Privacidade</h1>
-      
-      <div class="prose dark:prose-invert max-w-none space-y-8">
+    <div class="mx-auto max-w-4xl rounded-3xl border bg-white p-10 shadow-sm dark:border-neutral-800 dark:bg-neutral-900 md:p-16">
+      <h1 class="mb-8 border-b pb-6 text-4xl font-bold text-neutral-900 dark:border-neutral-800 dark:text-white">{{ t('privacyTitle') }}</h1>
+
+      <div class="prose max-w-none space-y-8 dark:prose-invert">
         <section>
-          <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">1. Recolha de Dados</h2>
-          <p class="text-neutral-600 dark:text-neutral-400">
-            A MiniStore AO recolhe informações pessoais que o utilizador nos fornece voluntariamente ao registar-se na nossa plataforma, tais como nome, email, endereço de entrega e dados de contacto.
-          </p>
+          <h2 class="mb-4 text-xl font-bold text-neutral-900 dark:text-white">{{ t('privacyCollectionTitle') }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400">{{ t('privacyCollectionText') }}</p>
         </section>
 
         <section>
-          <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">2. Finalidade do Tratamento</h2>
-          <p class="text-neutral-600 dark:text-neutral-400">
-            Os dados recolhidos destinam-se ao processamento de encomendas, gestão de conta de utilizador, apoio ao cliente e, caso autorizado, envio de comunicações de marketing.
-          </p>
+          <h2 class="mb-4 text-xl font-bold text-neutral-900 dark:text-white">{{ t('privacyPurposeTitle') }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400">{{ t('privacyPurposeText') }}</p>
         </section>
 
         <section>
-          <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">3. Proteção de Dados</h2>
-          <p class="text-neutral-600 dark:text-neutral-400">
-            Implementamos medidas de segurança técnicas e organizativas adequadas para proteger os seus dados pessoais contra a destruição acidental ou ilícita, a perda, a alteração e a difusão ou o acesso não autorizados.
-          </p>
+          <h2 class="mb-4 text-xl font-bold text-neutral-900 dark:text-white">{{ t('privacyProtectionTitle') }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400">{{ t('privacyProtectionText') }}</p>
         </section>
 
         <section>
-          <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">4. Direitos dos Utilizadores</h2>
-          <p class="text-neutral-600 dark:text-neutral-400">
-            O utilizador tem o direito de aceder, retificar, apagar ou limitar o tratamento dos seus dados pessoais. Pode exercer estes direitos através das definições de perfil ou contactando o nosso suporte.
-          </p>
+          <h2 class="mb-4 text-xl font-bold text-neutral-900 dark:text-white">{{ t('privacyRightsTitle') }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400">{{ t('privacyRightsText') }}</p>
         </section>
 
         <section>
-          <h2 class="text-xl font-bold text-neutral-900 dark:text-white mb-4">5. Cookies</h2>
-          <p class="text-neutral-600 dark:text-neutral-400">
-            Utilizamos cookies para melhorar a experiência de navegação e analisar o tráfego do site. Pode gerir as suas preferências de cookies nas definições do seu navegador.
-          </p>
+          <h2 class="mb-4 text-xl font-bold text-neutral-900 dark:text-white">{{ t('privacyCookiesTitle') }}</h2>
+          <p class="text-neutral-600 dark:text-neutral-400">{{ t('privacyCookiesText') }}</p>
         </section>
       </div>
 
-      <div class="mt-16 p-6 bg-primary/5 rounded-2xl border border-primary/10">
-        <p class="text-sm text-neutral-500 text-center">
-          Esta política está em conformidade com as boas práticas de proteção de dados. <br>
-          MiniStore AO - Comprometidos com a sua privacidade.
-        </p>
+      <div class="mt-16 rounded-2xl border border-primary/10 bg-primary/5 p-6">
+        <p class="text-center text-sm text-neutral-500">{{ t('privacyFooterNote') }}</p>
       </div>
     </div>
   </div>

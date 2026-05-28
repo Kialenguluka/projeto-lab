@@ -6,6 +6,7 @@ import { CartService } from '../../core/services/cart.service';
 import { ProductItem, ProductService } from '../../core/services/product.service';
 import { FooterComponent } from '../../layout/footer.component';
 import { HeaderComponent } from '../../layout/header.component';
+import { LanguageService } from '../../core/services/language.service';
 
 @Component({
   selector: 'app-propriedade-detail',
@@ -17,6 +18,7 @@ export class PropriedadeDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly productService = inject(ProductService);
   private readonly cartService = inject(CartService);
+  private readonly languageService = inject(LanguageService);
 
   product: ProductItem | null = null;
   quantity = 1;
@@ -27,7 +29,7 @@ export class PropriedadeDetailComponent implements OnInit {
   ngOnInit(): void {
     const productId = Number(this.route.snapshot.paramMap.get('id'));
     if (!productId) {
-      this.errorMessage = 'Produto invalido.';
+      this.errorMessage = this.t('productUnavailable');
       return;
     }
 
@@ -38,18 +40,18 @@ export class PropriedadeDetailComponent implements OnInit {
         this.loading = false;
       },
       error: () => {
-        this.errorMessage = 'Nao foi possivel carregar o produto.';
+        this.errorMessage = this.t('catalogError');
         this.loading = false;
       },
     });
   }
 
   get name(): string {
-    return this.product ? this.product.name_pt || this.product.name_en : '';
+    return this.product ? this.languageService.text(this.product.name_pt, this.product.name_en) : '';
   }
 
   get description(): string {
-    return this.product ? this.product.description_pt || this.product.description_en || '' : '';
+    return this.product ? this.languageService.text(this.product.description_pt, this.product.description_en) : '';
   }
 
   get image(): string {
@@ -76,11 +78,15 @@ export class PropriedadeDetailComponent implements OnInit {
     this.errorMessage = '';
     this.cartService.addItem(this.product.id, this.quantity).subscribe({
       next: () => {
-        this.successMessage = 'Produto adicionado ao carrinho.';
+        this.successMessage = this.t('cartAddSuccess');
       },
       error: () => {
-        this.errorMessage = 'Inicie sessao para adicionar produtos ao carrinho.';
+        this.errorMessage = this.t('cartAddLoginRequired');
       },
     });
+  }
+
+  t(key: string): string {
+    return this.languageService.t(key);
   }
 }
